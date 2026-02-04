@@ -47,14 +47,21 @@
 
 <main class="pt-4">
 <div class="container">
-    <div class="card" style="width: 18rem;">
-        <img src="/images/large/1897d0d4-9081-4cee-89ef-d05d454bbefb.webp" class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+    <div class="row">
+
+        <div th:each="category : ${categories}" class="col-md-4">
+            <div class="card" style="width: 100%;">
+                <img th:src="@{'/images/large/'+ ${category.image}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${category.name}"></h5>
+                    <p class="card-text" th:text="${category.slug}"></p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
         </div>
+
     </div>
+
 </div>
 </main>
 
