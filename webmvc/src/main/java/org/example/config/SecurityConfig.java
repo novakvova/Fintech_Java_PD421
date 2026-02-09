@@ -18,8 +18,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/register",
+                                "/users/registration",
+                                "/users/login",
                                 "/",
+                                "/categories/list",
                                 "/css/**",
                                 "/" + uploadDir + "/**",
                                 "/forgot-password",
@@ -29,9 +31,9 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/users", true)
+                        .loginPage("/users/login")
+                        .loginProcessingUrl("/users/login")
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
