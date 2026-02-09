@@ -10,6 +10,6 @@ public class EmailConfiguration {
     // Ім’я користувача
     public static final String USERNAME = "super.novakvova@ukr.net";
     // Пароль користувача
-    public static final String PASSWORD = "YrlsnPgGQLIFW3Yg";
+    public static final String PASSWORD = "H4zXcapCSjToppeq";
 }
 
