@@ -3,6 +3,7 @@ package org.example.services;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.dtos.user.ForgotPasswordDTO;
+import org.example.dtos.user.ResetPasswordDTO;
 import org.example.dtos.user.UserRegisterDTO;
 import org.example.entities.UserEntity;
 import org.example.mappers.UserMapper;
@@ -55,7 +56,7 @@ public class UserService implements UserDetailsService {
 
         String siteUrl = getSiteUrl(request);
 
-        String resetLink = siteUrl + "/reset-password?token=" + token;
+        String resetLink = siteUrl + "/users/reset-password?token=" + token;
 
         String subject = "Відновлення паролю";
         String body = """
@@ -114,5 +115,23 @@ public class UserService implements UserDetailsService {
 
         url.append(contextPath);
         return url.toString();
+    }
+
+    public boolean resetPassword(ResetPasswordDTO dto) {
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            return false;
+        }
+
+        Optional<UserEntity> userOpt = userRepository.findByResetPasswordToken(dto.getToken());
+        if (userOpt.isEmpty()) {
+            return false;
+        }
+
+        UserEntity user = userOpt.get();
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        user.setResetPasswordToken(null);
+        userRepository.save(user);
+
+        return true;
     }
 }

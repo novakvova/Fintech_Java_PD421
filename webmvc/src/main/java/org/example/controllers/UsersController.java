@@ -4,15 +4,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.dtos.user.ForgotPasswordDTO;
+import org.example.dtos.user.ResetPasswordDTO;
 import org.example.dtos.user.UserRegisterDTO;
 import org.example.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/users")
@@ -52,16 +50,43 @@ public class UsersController {
             HttpServletRequest request) {
 
         if (result.hasErrors()) {
-            return "account/forgot-password";
+            return "users/forgot-password";
         }
 
         boolean sent = userService.forgotPassword(forgotPasswordDTO, request);
         if (sent) {
-            return "account/forgot-password-success";
+            return "users/forgot-password-success";
         } else {
             model.addAttribute("error", "Користувача з таким email не знайдено.");
-            return "account/forgot-password";
+            return "users/forgot-password";
         }
     }
 
+    @GetMapping("/reset-password")
+    public String resetPasswordForm(@RequestParam("token") String token, Model model) {
+        ResetPasswordDTO dto = new ResetPasswordDTO();
+        dto.setToken(token);
+        model.addAttribute("resetPasswordDTO", dto);
+        return "users/reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPasswordSubmit(
+            @Valid @ModelAttribute ResetPasswordDTO resetPasswordDTO,
+            BindingResult result,
+            Model model) {
+
+        if (result.hasErrors()) {
+            return "users/reset-password";
+        }
+
+        boolean success = userService.resetPassword(resetPasswordDTO);
+        if (success) {
+            model.addAttribute("message", "Пароль успішно змінено! Тепер ви можете увійти.");
+            return "users/login";
+        } else {
+            model.addAttribute("error", "Токен недійсний або паролі не співпадають.");
+            return "users/reset-password";
+        }
+    }
 }

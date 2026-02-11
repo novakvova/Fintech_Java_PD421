@@ -22,11 +22,10 @@ public class SecurityConfig {
                                 "/users/login",
                                 "/",
                                 "/categories/list",
-                                "/users/forgot-password",
                                 "/css/**",
                                 "/" + uploadDir + "/**",
-                                "/forgot-password",
-                                "/reset-password"
+                                "/users/forgot-password",
+                                "/users/reset-password"
 //                                "/categories/list"
                         ).permitAll()
                         .anyRequest().authenticated()
