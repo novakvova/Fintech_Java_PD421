@@ -22,6 +22,7 @@ public class SecurityConfig {
                                 "/users/login",
                                 "/",
                                 "/categories/list",
+                                "/users/forgot-password",
                                 "/css/**",
                                 "/" + uploadDir + "/**",
                                 "/forgot-password",

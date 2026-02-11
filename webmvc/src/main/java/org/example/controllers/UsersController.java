@@ -1,11 +1,16 @@
 package org.example.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.dtos.user.ForgotPasswordDTO;
 import org.example.dtos.user.UserRegisterDTO;
 import org.example.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -32,4 +37,31 @@ public class UsersController {
     public String showLoginForm(){
         return "users/login";
     }
+
+    @GetMapping("/forgot-password")
+    public String forgotPasswordForm(Model model) {
+        model.addAttribute("forgotPasswordDTO", new ForgotPasswordDTO());
+        return "users/forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String forgotPasswordSubmit(
+            @Valid @ModelAttribute ForgotPasswordDTO forgotPasswordDTO,
+            BindingResult result,
+            Model model,
+            HttpServletRequest request) {
+
+        if (result.hasErrors()) {
+            return "account/forgot-password";
+        }
+
+        boolean sent = userService.forgotPassword(forgotPasswordDTO, request);
+        if (sent) {
+            return "account/forgot-password-success";
+        } else {
+            model.addAttribute("error", "Користувача з таким email не знайдено.");
+            return "account/forgot-password";
+        }
+    }
+
 }
